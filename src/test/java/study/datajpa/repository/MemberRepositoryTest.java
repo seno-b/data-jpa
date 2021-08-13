@@ -14,6 +14,8 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 
 @SpringBootTest
@@ -144,5 +146,17 @@ class MemberRepositoryTest {
         for (Member member : aaa1) {
             System.out.println("member = " + member);
         }
+    }
+
+    @Test
+    public void findOptinalByUsername() {
+        Member aaa = new Member("AAA", 10);
+        Member bbb = new Member("BBB", 20);
+        memberRepository.save(aaa);
+        memberRepository.save(bbb);
+
+        Optional<Member> result = memberRepository.findOptinalByUsername("AAA");
+        System.out.println("result = " + result);
+
     }
 }
