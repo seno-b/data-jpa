@@ -4,6 +4,9 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.dto.MemberDto;
@@ -159,4 +162,36 @@ class MemberRepositoryTest {
         System.out.println("result = " + result);
 
     }
+
+    @Test
+    public void paging() {
+        memberRepository.save(new Member("member1", 10));
+        memberRepository.save(new Member("member2", 10));
+        memberRepository.save(new Member("member3", 10));
+        memberRepository.save(new Member("member4", 10));
+        memberRepository.save(new Member("member5", 10));
+        memberRepository.save(new Member("member6", 10));
+        memberRepository.save(new Member("member7", 10));
+        memberRepository.save(new Member("member8", 10));
+
+        int age = 10;
+        PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "username"));
+
+        Page<Member> result = memberRepository.findByAge(age, pageRequest);
+
+        List<Member> content = result.getContent();
+
+        for (Member member : content) {
+            System.out.println("member = " + member);
+        }
+
+        Assertions.assertThat(result.getNumber()).isEqualTo(0);
+        Assertions.assertThat(result.getTotalElements()).isEqualTo(8);
+        Assertions.assertThat(result.getTotalPages()).isEqualTo(3);
+        Assertions.assertThat(result.isFirst()).isTrue();
+        Assertions.assertThat(result.hasNext()).isTrue();
+
+
+    }
+
 }
