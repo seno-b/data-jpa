@@ -194,4 +194,13 @@ class MemberRepositoryTest {
 
     }
 
+    @Test
+    public void findMemberLazy() {
+
+        Team teamA = new Team("teamA");
+        Team teamB = new Team("teamB");
+        teamRepository.save(teamA);
+        teamRepository.save(teamB);
+    }
+
 }
