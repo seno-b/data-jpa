@@ -108,6 +108,7 @@ class MemberJpaRepositoryTest {
     }
 
     @Test
+    @Transactional(readOnly = false)
     public void bulkUpdate() {
         memberJpaRepository.save(new Member("member1", 10));
         memberJpaRepository.save(new Member("member2", 19));
