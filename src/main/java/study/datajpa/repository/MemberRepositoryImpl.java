@@ -20,11 +20,4 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                 .getResultList();
     }
 
-    private Predicate usernameEq(String username) {
-        if (Objects.isNull(username)) {
-            return null;
-        }
-
-        return null;
-    }
 }
