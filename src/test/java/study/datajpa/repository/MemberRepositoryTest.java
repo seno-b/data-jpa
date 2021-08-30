@@ -4,9 +4,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
@@ -301,5 +299,36 @@ class MemberRepositoryTest {
         //then
         Assertions.assertThat(result.size()).isEqualTo(1);
 
+    }
+
+    @Test
+    public void queryByExample() {
+
+        //given
+        Team teamA = new Team("teamA");
+        teamRepository.save(teamA);
+
+        Member member1 = new Member("member1", 10, teamA);
+        Member member2 = new Member("member2", 10, teamA);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        em.flush();
+        em.clear();
+
+        // when
+        // Probe
+        Member m1 = new Member("member1");
+        Team team = new Team("teamA");
+        m1.setTeam(team);
+
+        ExampleMatcher matcher = ExampleMatcher.matching().withIgnorePaths("age");
+
+        Example<Member> example = Example.of(m1, matcher);
+
+        List<Member> result = memberRepository.findAll(example);
+
+        // then
+        Assertions.assertThat(result.get(0).getUsername()).isEqualTo("member1");
     }
 }
