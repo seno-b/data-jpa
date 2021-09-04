@@ -350,4 +350,28 @@ class MemberRepositoryTest {
             System.out.println("team name = " + netstedClosedProjections.getTeam().getName());
         }
     }
+
+    @Test
+    public void nativeQueryTest() {
+        //given
+        Team teamA = new Team("teamA");
+        teamRepository.save(teamA);
+
+        Member member1 = new Member("member1", 10, teamA);
+        Member member2 = new Member("member2", 10, teamA);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        em.flush();
+        em.clear();
+
+        //when
+        Page<NativeProjections> byNativeProjections = memberRepository.findByNativeProjections(PageRequest.of(0, 10));
+        List<NativeProjections> content = byNativeProjections.getContent();
+
+        for (NativeProjections nativeProjections : content) {
+            System.out.println(nativeProjections.getUsername());
+            System.out.println(nativeProjections.getTeamName());
+        }
+    }
 }
