@@ -35,10 +35,10 @@ public class MemberController {
         return member.getUsername();
     }
 
-    @PostConstruct
+    /*@PostConstruct
     public void init() {
         for(int i = 0; i < 100; i++){
             memberRepository.save(new Member("user" + i, i));
         }
-    }
+    }*/
 }

@@ -13,12 +13,9 @@ import study.datajpa.entity.Member;
 import study.datajpa.entity.Team;
 
 import javax.persistence.EntityManager;
-import javax.swing.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 
 @SpringBootTest
@@ -330,5 +327,27 @@ class MemberRepositoryTest {
 
         // then
         Assertions.assertThat(result.get(0).getUsername()).isEqualTo("member1");
+    }
+
+    @Test
+    public void projectionsTest() {
+        //given
+        Team teamA = new Team("teamA");
+        teamRepository.save(teamA);
+
+        Member member1 = new Member("member1", 10, teamA);
+        Member member2 = new Member("member2", 10, teamA);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        em.flush();
+        em.clear();
+
+        List<NetstedClosedProjections> result = memberRepository.findProjectionsByUsername("member1", NetstedClosedProjections.class);
+
+        for (NetstedClosedProjections netstedClosedProjections : result) {
+            System.out.println("username = " + netstedClosedProjections.getUsername());
+            System.out.println("team name = " + netstedClosedProjections.getTeam().getName());
+        }
     }
 }
